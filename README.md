@@ -1,7 +1,6 @@
 # ipfs-gc
 Automatic IPFS Garbage Collection
 
-Run from the command line by just running 'ipfs-gc'.
 
 # Installation
 ```
