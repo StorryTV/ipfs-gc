@@ -1,9 +1,19 @@
 #!/bin/bash
-IPFS_GC_USER='ipfs'
-IPFS_GC_MIN_STORAGE=10485760 #Put here in bytes how much free space has to be left before ipfs-gc runs.
+while getopts u:s:p: flag
+do
+    case "${flag}" in
+        u) username=${OPTARG};;
+        s) minstorage=${OPTARG};;
+        p) fullpathtoipfsblocks=${OPTARG};;
+    esac
+done
+IPFS_GC_USER=$username || $(whoami)
+IPFS_GC_MIN_STORAGE=$minstorage || 10485760 #Put here in bytes how much free space has to be left before ipfs-gc runs.
 IPFS_GC_HOME="/home/${IPFS_GC_USER}"
 IPFS_GC_TMP='/var/ipfs_gc'
-if [[ -d "${IPFS_GC_HOME}" ]]; then
+if [[ -d "${fullpathtoipfsblocks}" ]]; then
+	FREE=`df -k --output=avail "${fullpathtoipfsblocks}" | tail -n1`
+elif [[ -d "${IPFS_GC_HOME}" ]]; then
 	FREE=`df -k --output=avail "${IPFS_GC_HOME}" | tail -n1`
 else
 	FREE=`df -k --output=avail / | tail -n1`
