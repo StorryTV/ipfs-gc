@@ -54,11 +54,10 @@ if [[ $VAR = 'y' ]]; then
         echo -n "Does your ipfs daemon run under the following user: $(whoami) (y/n): "
 	read VAR
 	if [[ $VAR = 'y' ]]; then
-		IPFS_GC_PARAMS_NAME="$(whoami)"
+		IPFS_GC_PARAMS_NAME=$(whoami)
 	elif [[ $VAR = 'n' ]]; then
 		echo -n "Please enter the username the ipfs daemon runs under: "
-		read $VAR_
-		IPFS_GC_PARAMS_NAME=" -u $VAR_"
+		read IPFS_GC_PARAMS_NAME
 	fi
 	echo ''
         echo -n "Enter how much free space has to be left for IPFS GC to run (in Kilobytes/kb!): "
@@ -72,7 +71,7 @@ if [[ $VAR = 'y' ]]; then
 	else
 		IPFS_GC_PARAMS_PATHTOBLOCKS=" -p ${VAR}"
 	fi
-	IPFS_GC_CRONCMD="/usr/bin/ipfs-gc${IPFS_GC_PARAMS_NAME}${IPFS_GC_PARAMS_STORAGE}${IPFS_GC_PARAMS_PATHTOBLOCKS}"
+	IPFS_GC_CRONCMD="/usr/bin/ipfs-gc -u ${IPFS_GC_PARAMS_NAME}${IPFS_GC_PARAMS_STORAGE}${IPFS_GC_PARAMS_PATHTOBLOCKS}"
         IPFS_GC_CRONJOB="${VAR_1} ${IPFS_GC_CRONCMD}"
         echo 'Installing Cronjob...'
         (( crontab -l | grep -v -F "${IPFS_GC_CRONCMD}" ; echo "${IPFS_GC_CRONJOB}" ) | crontab -) || command_failed=1
