@@ -51,7 +51,7 @@ if [[ $VAR = 'y' ]]; then
                 fi
         fi
 	echo ''
-        echo -n "Does your ipfs daemon run under the following user: $(whoami) (y/n)"
+        echo -n "Does your ipfs daemon run under the following user: $(whoami) (y/n): "
 	read VAR
 	if [[ $VAR = 'y' ]]; then
 		IPFS_GC_PARAMS_NAME=$(whoami)
