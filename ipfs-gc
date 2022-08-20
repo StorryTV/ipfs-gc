@@ -1,0 +1,72 @@
+#!/bin/bash
+IPFS_USER='ipfs'
+IPFS_GC_MIN_STORAGE=10485760 #Put here in bytes how much free space has to be left before ipfs-gc runs.
+IPFS_GC_HOME="/home/${IPFS_USER}/"
+IPFS_GC_TMP='/var/ipfs_gc/'
+if [[ -d "${IPFS_GC_HOME}" ]]; then
+	FREE=`df -k --output=avail "${IPFS_GC_HOME}" | tail -n1`
+else
+	FREE=`df -k --output=avail / | tail -n1`
+fi
+if [[ -d "${IPFS_GC_TMP}" ]]; then
+	echo ''
+else
+	mkdir $IPFS_GC_TMP
+fi
+if [[ $FREE -lt $IPFS_GC_MIN_STORAGE ]]; then     # 10GB*1024MB*1024KB = 10485760
+	# less than 10GB storage!
+	echo 'Starting IPFS GC'
+	GC_RUNNING="${IPFS_GC_TMP}gc_running"
+	if [[ -f "${GC_RUNNING}" ]]; then
+		echo 'IPFS GC is already running'
+	else
+		touch "${IPFS_GC_TMP}gc_running" || command_failed=1
+		if [ ${command_failed:-0} -eq 1 ]; then
+			echo 'Failed: touch "${IPFS_GC_TMP}gc_running"'
+			command_failed=0
+		fi
+		chmod 700 "${IPFS_GC_TMP}gc_running" || command_failed=1
+		if [ ${command_failed:-0} -eq 1 ]; then
+			echo 'Failed: chmod 700 "${IPFS_GC_TMP}gc_running"'
+			command_failed=0
+		fi
+		rm -rf "${IPFS_GC_HOME}emptyfile" || command_failed=1
+		if [ ${command_failed:-0} -eq 1 ]; then
+			echo 'Failed: rm -rf "${IPFS_GC_HOME}emptyfile"'
+			command_failed=0
+		fi
+		systemctl stop ipfs || command_failed=1
+		if [ ${command_failed:-0} -eq 1 ]; then
+			echo 'Failed: systemctl stop ipfs'
+			command_failed=0
+		fi
+		ipfs shutdown || command_failed=1
+		if [ ${command_failed:-0} -eq 1 ]; then
+			echo 'Failed: ipfs shutdown'
+			command_failed=0
+		fi
+		sudo -H -u ipfs bash -c 'ipfs repo gc' || command_failed=1
+		if [ ${command_failed:-0} -eq 1 ]; then
+			echo 'Failed: sudo -H -u ipfs bash -c ipfs repo gc'
+			command_failed=0
+		fi
+		systemctl start ipfs || command_failed=1
+		if [ ${command_failed:-0} -eq 1 ]; then
+			echo 'Failed: systemctl start ipfs'
+			command_failed=0
+		fi
+		fallocate -l 500M "${IPFS_GC_HOME}emptyfile" || command_failed=1
+		if [ ${command_failed:-0} -eq 1 ]; then
+			echo 'Failed: fallocate -l 500M "${IPFS_GC_HOME}emptyfile"'
+			command_failed=0
+		fi
+		rm -rf "${IPFS_GC_TMP}gc_running" || command_failed=1
+		if [ ${command_failed:-0} -eq 1 ]; then
+			echo 'Failed: rm -rf "${IPFS_GC_TMP}gc_running"'
+			command_failed=0
+		fi
+		echo 'IPFS Automatic GC succesfully completed'
+	fi
+else
+	echo 'IPFS Automatic GC not needed yet'
+fi
