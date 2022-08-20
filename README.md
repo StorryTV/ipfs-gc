@@ -1,5 +1,5 @@
 # ipfs-gc
-Standalone IPFS Garbage Collection (automatic)
+Automatic IPFS Garbage Collection
 
 Run from the command line by just running 'ipfs-gc'.
 
@@ -28,3 +28,6 @@ We want to run it only if the total free storage is less than 10GB (Only in byte
 And the path to the ipfs blocks is: /home/bob/.ipfs/blocks (This is to make sure it checks the free storage from the folder as it may differ from other folders on the system if the folder is for example a mount to an external network drive, but in a standard ipfs setup this may not be necessery)
 
 None of the parameters are mandatory, but the keep in mind it then uses default inputs which may not be right for your system.
+
+#
+Also generates an empty file of 500mb in case your gateway has a very busy day and gets a full disk before garbage collection has been able to run or complete. In that case it deletes this file (creating 500mb free space) to be able to function properly as some gateways have had trouble to function again after too many requests filling up the whole disk to the last byte. This prevents this problem as you will always have 500mb left to work with and running IPFS GC to free up space.
