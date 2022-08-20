@@ -1,7 +1,7 @@
 # ipfs-gc
 Standalone IPFS Garbage Collection (automatic)
 
-This can be run from the command line by just running 'ipfs-gc'.
+Run from the command line by just running 'ipfs-gc'.
 
 # Installation
 ```
