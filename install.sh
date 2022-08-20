@@ -55,14 +55,14 @@ if [[ $VAR = 'y' ]]; then
                 echo 'Cronjob installed succesfully!'
         fi
 fi
-chmod 775 "${CURRENT_DIR}/ipfs_gc" || command_failed=1
+chmod 775 "${CURRENT_DIR}/ipfs-gc" || command_failed=1
 if [ ${command_failed:-0} -eq 1 ]; then
-        echo "Failed: chmod 775 \"${CURRENT_DIR}/ipfs_gc\""
+        echo "Failed: chmod 775 \"${CURRENT_DIR}/ipfs-gc\""
         command_failed=0
 fi
-mv "${CURRENT_DIR}/ipfs_gc" /usr/bin/ || command_failed=1
+mv "${CURRENT_DIR}/ipfs-gc" /usr/bin/ || command_failed=1
 if [ ${command_failed:-0} -eq 1 ]; then
-        echo "Failed: mv \"${CURRENT_DIR}/ipfs_gc\" /usr/bin/"
+        echo "Failed: mv \"${CURRENT_DIR}/ipfs-gc\" /usr/bin/"
         command_failed=0
 else
         echo 'IPFS GC has been sucesfully installed! (You run it manually by entering \'ipfs-gc\' as root or using sudo: \'sudo ipfs-gc\')'
