@@ -65,5 +65,5 @@ if [ ${command_failed:-0} -eq 1 ]; then
         echo "Failed: mv \"${CURRENT_DIR}/ipfs-gc\" /usr/bin/"
         command_failed=0
 else
-        echo 'IPFS GC has been sucesfully installed! (You run it manually by entering \'ipfs-gc\' as root or using sudo: \'sudo ipfs-gc\')'
+        echo 'IPFS GC has been sucesfully installed! You can also run it manually by entering: ipfs-gc as root or using sudo: sudo ipfs-gc'
 fi
