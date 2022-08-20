@@ -13,20 +13,24 @@ fi
 echo -n 'Do you want to run IPFS GC Automatically at a given schedule? (y/n): '
 read VAR
 if [[ $VAR = 'y' ]]; then
+	echo ''
         echo -n 'Do you want to run IPFS GC hourly(h), daily(d), weekly(w) or monthly(m)? (h/d/w/m): '
         read VAR
         if [[ $VAR = 'h' ]]; then
                 VAR_1='0 * * * *'
         elif [[ $VAR = 'd' ]]; then
+		echo ''
                 echo -n 'At what hour? (Choose from 00 to 23): '
                 read VAR_
                 if [[ $VAR_ -lt 24 ]]; then
                         VAR_1="0 ${VAR_} * * *"
                 fi
         elif [[ $VAR = 'w' ]]; then
+		echo ''
                 echo -n 'What day of the week: Monday(1), Tuesday(2), Wednesday(3), Thursday(4), Friday(5), Saturday(6), Sunday(7)? (Choose from 1 to 7): '
                 read VAR_
                 if [[ $VAR_ -lt 8 ]]; then
+			echo ''
                         echo -n 'At what hour? (Choose from 00 to 23): '
                         read VAR__
                         if [[ $VAR__ -lt 24 ]]; then
@@ -34,9 +38,11 @@ if [[ $VAR = 'y' ]]; then
                         fi
                 fi
         elif [[ $VAR = 'm' ]]; then
+		echo ''
                 echo -n 'What day of the month? (Choose from 1 to 28): '
                 read VAR_
                 if [[ $VAR_ -lt 32 ]]; then
+			echo ''
                         echo -n 'At what hour? (Choose from 00 to 23): '
                         read VAR__
                         if [[ $VAR__ -lt 24 ]]; then
