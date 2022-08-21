@@ -8,7 +8,20 @@ do
     esac
 done
 IPFS_GC_USER=$username || $(whoami)
-IPFS_GC_MIN_STORAGE=$minstorage || 10485760 #Put here in bytes how much free space has to be left before ipfs-gc runs.
+if [[ -f "/home/${IPFS_GC_USER}/.ipfs/config" ]]; then
+	IPFS_STORAGE_MAX=$(sudo grep -o '"StorageMax": "[^"]*' /home/${IPFS_GC_USER}/.ipfs/config | sudo grep -o '[^"]*$')
+	if [[ "$IPFS_STORAGE_MAX" == *"G"* ]]; then
+		IPFS_STORAGE_MAX=$(echo $IPFS_STORAGE_MAX | echo $(($(cut -d "G" -f 1) * 1048576)))
+	elif [[ "$IPFS_STORAGE_MAX" == *"M"* ]]; then
+		IPFS_STORAGE_MAX=$(echo $IPFS_STORAGE_MAX | echo $(($(cut -d "M" -f 1) * 1024)))
+	fi
+	IPFS_STORAGE_WATERMARK=$(jq .Datastore.StorageGCWatermark /home/${IPFS_GC_USER}/.ipfs/config)
+	#IPFS_STORAGE_WATERMARK=$(sudo grep -o '"StorageGCWatermark": "[^,]*' /home/${IPFS_GC_USER}/.ipfs/config | sed -n 's|.*\([^"]*\)".*|\1|p')
+	IPFS_STORAGE_MAX_=$(echo $(($IPFS_STORAGE_MAX / 100)))
+	IPFS_STORAGE_MAX_=$(echo $(($IPFS_STORAGE_MAX_ * $IPFS_STORAGE_WATERMARK)))
+	IPFS_STORAGE_MIN=$(echo $(($IPFS_STORAGE_MAX - $IPFS_STORAGE_MAX_)))
+fi
+IPFS_GC_MIN_STORAGE=$minstorage || $IPFS_STORAGE_MIN || 10485760 #Put here in bytes how much free space has to be left before ipfs-gc runs.
 IPFS_GC_HOME="/home/${IPFS_GC_USER}"
 IPFS_GC_TMP='/var/ipfs_gc'
 if [[ -d "${fullpathtoipfsblocks}" ]]; then
