@@ -1,15 +1,7 @@
 #!/bin/bash
 CURRENT_DIR=$(pwd)
 IPFS_GC_TMP='/var/ipfs_gc/'
-if [[ -d "${IPFS_GC_TMP}" ]]; then
-	echo ''
-else
-	mkdir $IPFS_GC_TMP || command_failed=1
-        if [ ${command_failed:-0} -eq 1 ]; then
-		echo "Failed: mkdir ${IPFS_GC_TMP}"
-		command_failed=0
-	fi
-fi
+echo ''
 echo -n 'Do you want to run IPFS GC Automatically at a given schedule? (y/n): '
 read VAR
 if [[ $VAR = 'y' ]]; then
@@ -76,11 +68,25 @@ if [[ $VAR = 'y' ]]; then
         echo 'Installing Cronjob...'
         (( crontab -l | grep -v -F "${IPFS_GC_CRONCMD}" ; echo "${IPFS_GC_CRONJOB}" ) | crontab -) || command_failed=1
         if [ ${command_failed:-0} -eq 1 ]; then
-                echo "Failed: mkdir (( crontab -l | grep -v -F ${IPFS_GC_CRONCMD} ; echo ${IPFS_GC_CRONJOB} ) | crontab -)"
+                echo "Failed: (( crontab -l | grep -v -F \"${IPFS_GC_CRONCMD}\" ; echo \"${IPFS_GC_CRONJOB}\" ) | crontab -)"
                 command_failed=0
         else
                 echo 'Cronjob installed succesfully!'
         fi
+fi
+if [[ -d "${IPFS_GC_TMP}" ]]; then
+	rm -rf "${IPFS_GC_TMP}"
+	mkdir "${IPFS_GC_TMP}" || command_failed=1
+        if [ ${command_failed:-0} -eq 1 ]; then
+		echo "Failed: mkdir \"${IPFS_GC_TMP}\""
+		command_failed=0
+	fi
+else
+	mkdir "${IPFS_GC_TMP}" || command_failed=1
+        if [ ${command_failed:-0} -eq 1 ]; then
+		echo "Failed: mkdir \"${IPFS_GC_TMP}\""
+		command_failed=0
+	fi
 fi
 chmod 775 "${CURRENT_DIR}/maintenance-page/" || command_failed=1
 if [ ${command_failed:-0} -eq 1 ]; then
