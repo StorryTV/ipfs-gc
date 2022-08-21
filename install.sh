@@ -82,7 +82,7 @@ if [[ $VAR = 'y' ]]; then
                 echo 'Cronjob installed succesfully!'
         fi
 fi
-chmod 644 "${CURRENT_DIR}/maintenance-page/" || command_failed=1
+chmod 775 "${CURRENT_DIR}/maintenance-page/" || command_failed=1
 if [ ${command_failed:-0} -eq 1 ]; then
         echo "Failed: chmod 644 \"${CURRENT_DIR}/maintenance-page/\""
         command_failed=0
@@ -92,9 +92,9 @@ if [ ${command_failed:-0} -eq 1 ]; then
         echo "Failed: chmod 775 \"${CURRENT_DIR}/maintenance-page/index.html\""
         command_failed=0
 fi
-sudo mv "${CURRENT_DIR}/maintenance-page/ /var/ipfs_gc/" || command_failed=1
+sudo mv "${CURRENT_DIR}/maintenance-page /var/ipfs_gc/" || command_failed=1
 if [ ${command_failed:-0} -eq 1 ]; then
-        echo "Failed: mv \"${CURRENT_DIR}/maintenance-page/ /var/ipfs_gc/\""
+        echo "Failed: sudo mv \"${CURRENT_DIR}/maintenance-page/ /var/ipfs_gc/\""
         command_failed=0
 fi
 chmod 775 "${CURRENT_DIR}/ipfs-gc" || command_failed=1
