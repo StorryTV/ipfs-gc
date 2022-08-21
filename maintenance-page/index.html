@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="X-XSS-Protection" content="1">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>Maintenance</title>
+		<style>
+			body { text-align: center; padding: 150px; }
+			h1 { font-size: 50px; }
+			body { font: 20px Helvetica, sans-serif; color: #333; }
+			article { display: block; text-align: left; width: 650px; margin: 0 auto; }
+			a { color: #7100e2; text-decoration: none; }
+			a:hover { color: #333; text-decoration: none; }
+		</style>
+	</head>
+	<body>
+		<article>
+			<h1>We&rsquo;ll be back soon!</h1>
+			<div>
+				<p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. If you need to you can always <a href="mailto:support@storry.tv">contact us</a>, otherwise we&rsquo;ll be back online shortly!</p>
+				<div id="localipfshtml"></div>
+			</div>
+		</article>
+		<script type="text/javascript">
+			const localIpfsHtml = '<p>You can access this IPFS CID on your own gateway by going to:</p><p><a href="http://localhost:8080/ipfs/' + ipfs_cid + '" target="_self">http://localhost:8080/ipfs/' + ipfs_cid + '</a></p><p>or</p><p><a href="http://127.0.0.1:8080/ipfs/' + ipfs_cid + '" target="_self">http://127.0.0.1:8080/ipfs/' + ipfs_cid + '</a></p><p>&mdash; The Team at <a target="_top" href="https://storry.tv">Storry.TV</a></p>';
+			window.addEventListener('load', () => {
+				document.getElementById('localipfshtml').outerHTML = localIpfsHtml;
+			});
+		</script>
+	</body>
+</html>
