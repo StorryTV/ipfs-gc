@@ -92,7 +92,7 @@ if [ ${command_failed:-0} -eq 1 ]; then
         echo "Failed: chmod 775 \"${CURRENT_DIR}/maintenance-page/index.html\""
         command_failed=0
 fi
-mv "${CURRENT_DIR}/maintenance-page/ /var/ipfs_gc/" || command_failed=1
+sudo mv "${CURRENT_DIR}/maintenance-page/ /var/ipfs_gc/" || command_failed=1
 if [ ${command_failed:-0} -eq 1 ]; then
         echo "Failed: mv \"${CURRENT_DIR}/maintenance-page/ /var/ipfs_gc/\""
         command_failed=0
