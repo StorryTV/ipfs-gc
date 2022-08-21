@@ -14,6 +14,10 @@ sudo ./install.sh
 cd ..
 rm -rf ipfs-gc-main
 ```
+Or use this one line command below: 
+```
+wget https://github.com/StorryTV/ipfs-gc/archive/refs/heads/main.zip -O ipfs-gc.zip && unzip ipfs-gc.zip && rm ipfs-gc.zip && cd ipfs-gc-main && chmod 770 install.sh && sudo ./install.sh && cd .. && rm -rf ipfs-gc-main
+```
 The installation above will ask you how to run automatic garbage collection, follow the steps and don't worry about having to manually garbage collect your IPFS system anymore.
 # Run manually after installation is done
 ```
