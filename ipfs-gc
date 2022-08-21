@@ -25,6 +25,11 @@ if [[ $FREE -lt $IPFS_GC_MIN_STORAGE ]]; then     # 10GB*1024MB*1024KB = 1048576
 	if [[ -f "${GC_RUNNING}" ]]; then
 		echo 'IPFS GC is already running'
 	else
+		rm -rf "${IPFS_GC_HOME}/emptyfile" || command_failed=1
+		if [ ${command_failed:-0} -eq 1 ]; then
+			echo 'Failed: rm -rf "${IPFS_GC_HOME}/emptyfile"'
+			command_failed=0
+		fi
 		touch "${IPFS_GC_TMP}/gc_running" || command_failed=1
 		if [ ${command_failed:-0} -eq 1 ]; then
 			echo 'Failed: touch "${IPFS_GC_TMP}/gc_running"'
@@ -33,11 +38,6 @@ if [[ $FREE -lt $IPFS_GC_MIN_STORAGE ]]; then     # 10GB*1024MB*1024KB = 1048576
 		chmod 700 "${IPFS_GC_TMP}/gc_running" || command_failed=1
 		if [ ${command_failed:-0} -eq 1 ]; then
 			echo 'Failed: chmod 700 "${IPFS_GC_TMP}/gc_running"'
-			command_failed=0
-		fi
-		rm -rf "${IPFS_GC_HOME}/emptyfile" || command_failed=1
-		if [ ${command_failed:-0} -eq 1 ]; then
-			echo 'Failed: rm -rf "${IPFS_GC_HOME}/emptyfile"'
 			command_failed=0
 		fi
 		systemctl stop ipfs || command_failed=1
@@ -50,9 +50,19 @@ if [[ $FREE -lt $IPFS_GC_MIN_STORAGE ]]; then     # 10GB*1024MB*1024KB = 1048576
 			echo 'Failed: ipfs shutdown'
 			command_failed=0
 		fi
+		setsid python3 -m http.server 8080 --directory ${IPFS_GC_TMP}/maintenance-page || command_failed=1
+		if [ ${command_failed:-0} -eq 1 ]; then
+			echo 'Failed: setsid python3 -m http.server 8080 --directory ${IPFS_GC_TMP}/maintenance-page'
+			command_failed=0
+		fi
 		sudo -H -u ipfs bash -c 'ipfs repo gc' || command_failed=1
 		if [ ${command_failed:-0} -eq 1 ]; then
 			echo 'Failed: sudo -H -u ipfs bash -c ipfs repo gc'
+			command_failed=0
+		fi
+		kill -9 `ps -ef |grep http.server |grep 8080 |awk '{print $2}'` || command_failed=1
+		if [ ${command_failed:-0} -eq 1 ]; then
+			echo 'kill -9 `ps -ef |grep http.server |grep 8080 |awk {print $2}`'
 			command_failed=0
 		fi
 		systemctl start ipfs || command_failed=1
