@@ -68,9 +68,9 @@ if [[ $FREE -lt $IPFS_GC_MIN_STORAGE ]]; then     # 10GB*1024MB*1024KB = 1048576
 			echo "Failed: sudo -H -u ${IPFS_GC_USER} bash -c 'ipfs shutdown'"
 			command_failed=0
 		fi
-		setsid python3 -m http.server 8080 --directory ${IPFS_GC_TMP}/maintenance-page || command_failed=1
+		python3 -m http.server 8080 --directory ${IPFS_GC_TMP}/maintenance-page & || command_failed=1
 		if [ ${command_failed:-0} -eq 1 ]; then
-			echo "Failed: setsid python3 -m http.server 8080 --directory ${IPFS_GC_TMP}/maintenance-page"
+			echo "Failed: python3 -m http.server 8080 --directory ${IPFS_GC_TMP}/maintenance-page &"
 			command_failed=0
 		fi
 		sudo -H -u ${IPFS_GC_USER} bash -c 'ipfs repo gc' || command_failed=1
