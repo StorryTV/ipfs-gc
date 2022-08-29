@@ -74,6 +74,11 @@ if [[ $VAR = 'y' ]]; then
                 echo 'Cronjob installed succesfully!'
         fi
 fi
+apt install jq || command_failed=1
+if [ ${command_failed:-0} -eq 1 ]; then
+        echo "Failed: apt install jq"
+        command_failed=0
+fi
 if [[ -d "${IPFS_GC_TMP}" ]]; then
 	rm -rf "${IPFS_GC_TMP}"
 	mkdir "${IPFS_GC_TMP}" || command_failed=1
