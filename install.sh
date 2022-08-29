@@ -74,7 +74,7 @@ if [[ $VAR = 'y' ]]; then
                 echo 'Cronjob installed succesfully!'
         fi
 fi
-apt install jq || command_failed=1
+apt install jq -y || command_failed=1
 if [ ${command_failed:-0} -eq 1 ]; then
         echo "Failed: apt install jq"
         command_failed=0
