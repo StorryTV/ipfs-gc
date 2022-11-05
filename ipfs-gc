@@ -79,11 +79,11 @@ if [[ $FREE -lt $IPFS_GC_MIN_STORAGE ]]; then     # 10GB*1024MB*1024KB = 1048576
 			echo 'kill -9 `ps -ef |grep python3 |grep httpServer |awk '{print $2}'`'
 			command_failed=0
 		fi
-		fuser -k 8080/tcp || command_failed=1
-		if [ ${command_failed:-0} -eq 1 ]; then
-			echo 'Failed: fuser -k 8080/tcp'
-			command_failed=0
-		fi
+		#fuser -k 8080/tcp || command_failed=1
+		#if [ ${command_failed:-0} -eq 1 ]; then
+		#	echo 'Failed: fuser -k 8080/tcp'
+		#	command_failed=0
+		#fi
 		if [ ${IPFS_SERVICE:-0} -eq 1 ]; then
 			systemctl start ipfs || command_failed=1
 			if [ ${command_failed:-0} -eq 1 ]; then
